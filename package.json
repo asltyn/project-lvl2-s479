@@ -1,6 +1,6 @@
 {
   "name": "gendiff-hex-proj",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Compares two configuration files and show a difference",
   "main": "index.js",
   "scripts": {
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "commander": "^2.20.0",
+    "js-yaml": "^3.13.1",
     "lodash": "^4.17.11"
   }
 }
