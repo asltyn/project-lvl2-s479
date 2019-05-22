@@ -1,4 +1,5 @@
 import parseFile from './parsers';
+import getFormatter from './formatters';
 
 const makeAst = (objBeforeChange, objAfterChange) => {
   const allKeys = [...new Set([...Object.keys(objBeforeChange), ...Object.keys(objAfterChange)])];
@@ -10,39 +11,11 @@ const makeAst = (objBeforeChange, objAfterChange) => {
   }, []);
 };
 
-const render = (ast) => {
-  const stringify = (obj, tab) => Object.keys(obj).reduce((acc, key) => {
-    if (typeof obj[key] === 'object') {
-      const firstLine = `${' '.repeat(tab * 4)}${key}: {`;
-      const body = stringify(obj[key], tab + 1);
-      const lastLine = `${' '.repeat(tab * 4 + 2)}}`;
-      return [...acc, firstLine, body, lastLine];
-    }
-    return [...acc, `${' '.repeat(tab * 4)}${key}: ${obj[key]}`];
-  }, []).join('\n');
 
-  const iter = arr => arr.reduce((acc, elem) => {
-    if (elem.length === 3) {
-      const [key, val1, val2] = elem;
-      if (val1 === val2) {
-        acc[`  ${key}`] = val1;
-        return acc;
-      }
-      if (val2 !== undefined) acc[`+ ${key}`] = val2;
-      if (val1 !== undefined) acc[`- ${key}`] = val1;
-      return acc;
-    }
-    const [key, children] = elem;
-    acc[`  ${key}`] = iter(children);
-    return acc;
-  }, {});
-
-  return stringify(iter(ast), 0);
-};
-
-export default (path1, path2) => {
+export default (path1, path2, format) => {
   const objBeforeChange = parseFile(path1);
   const objAfterChange = parseFile(path2);
   const ast = makeAst(objBeforeChange, objAfterChange);
-  return render(ast);
+  const objToOutput = getFormatter(format)(ast);
+  return objToOutput;
 };

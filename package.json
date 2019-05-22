@@ -1,6 +1,6 @@
 {
   "name": "gendiff-hex-proj",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Compares two configuration files and show a difference",
   "main": "index.js",
   "scripts": {

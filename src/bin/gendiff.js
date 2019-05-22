@@ -2,12 +2,14 @@
 import * as commander from 'commander';
 import genDiff from '..';
 
-const command = new commander.Command();
-command.description('Compares two configuration files and show a difference.')
+const program = new commander.Command();
+program.description('Compares two configuration files and show a difference.')
   .option('-V, --version', 'output the version number')
-  .option('-f, --format [type]', 'Output format')
+  .option('-f, --format [type]', 'Output format', 'def')
   .arguments('<firstConfig> <secondConfig>')
   .parse(process.argv);
-const [pathToFile1, pathToFile2] = command.args;
-const diff = genDiff(pathToFile1, pathToFile2);
+
+if (program.args.length < 2) program.help();
+const [pathToFile1, pathToFile2] = program.args;
+const diff = genDiff(pathToFile1, pathToFile2, program.format);
 console.log(diff);
