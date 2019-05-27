@@ -9,8 +9,8 @@ const stringify = (val, i) => {
 
 const render = (ast) => {
   const indent = 4;
-  const iter = (acc, i) => acc.map((node) => {
-    const depth = ' '.repeat(i);
+  const iter = (acc, levelDepth) => acc.map((node) => {
+    const depth = ' '.repeat(treeDepth);
     switch (node.type) {
       case 'added': return `${depth}+ ${node.name}: ${stringify(node.newValue, i + indent)}`;
       case 'deleted': return `${depth}- ${node.name}: ${stringify(node.oldValue, i + indent)}`;

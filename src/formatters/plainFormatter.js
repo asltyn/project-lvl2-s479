@@ -4,14 +4,20 @@ const stringify = val => (typeof val === 'object' ? '[complex value]' : val);
 const formatName = (name, parent) => (parent === '' ? name : `${parent}.${name}`);
 
 const render = (ast) => {
-  const iter = (acc, parentName) => acc.map((node) => {
-    const key = `Property '${formatName(node.name, parentName)}' was`;
-    switch (node.type) {
-      case 'added': return `${key} added with value: ${stringify(node.newValue)}`;
-      case 'deleted': return `${key} removed`;
-      case 'changed': return `${key} updated. From ${stringify(node.oldValue)} to ${stringify(node.newValue)}`;
-      case 'inner': return iter(node.children, formatName(node.name, parentName));
-      default: return null;
+  const iter = (acc, parentKey) => acc.map((node) => {
+    const {type, key, value} = node;
+    const startLine = `Property '${formatName(key, parentKey)}' was`;
+    switch (type) {
+      case 'added': 
+        return `${startLine} added with value: ${stringify(value)}`;
+      case 'deleted': 
+        return `${startLine} removed`;
+      case 'changed': 
+        return `${startLine} updated. From ${stringify(value.oldValue)} to ${stringify(value.newValue)}`;
+      case 'inner': 
+        return iter(value, formatName(key, parentKey));
+      default: 
+        return null;
     }
   });
   return _.flattenDeep(iter(ast, '')).filter(x => x).join('\n');
