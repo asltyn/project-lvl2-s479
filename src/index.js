@@ -35,7 +35,5 @@ export default (path1, path2, format) => {
   const objBeforeChange = parser1(fs.readFileSync(absPathToFile1, 'UTF-8'));
   const objAfterChange = parser2(fs.readFileSync(absPathToFile2, 'UTF-8'));
   const ast = makeAst(objBeforeChange, objAfterChange);
-  console.log(ast);
-  const objToOutput = getFormatter(format)(ast);
-  return objToOutput;
+  return getFormatter(format)(ast);
 };

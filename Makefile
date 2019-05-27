@@ -1,8 +1,8 @@
 install: 
-	sudo npm install
+	npm install
 
 start:
-	sudo npx babel-node src/bin/gendiff.js
+	npx babel-node src/bin/gendiff.js
 
 publish:
 	npm publish

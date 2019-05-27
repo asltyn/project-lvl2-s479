@@ -1,22 +1,20 @@
-const render = (ast) => {
-  const formatKey = (key, path) => (path === '' ? key : `${path}.${key}`);
-  const formatVal = val => (typeof val === 'object' ? '[complex value]' : val);
-  const iter = (arr, path) => arr.reduce((acc, elem) => {
-    if (elem.length === 3) {
-      const [key, val1, val2] = elem;
-      if (val1 === val2) {
-        return acc;
-      }
-      const startSting = `Property '${formatKey(key, path)}' was`;
-      if (val1 === undefined) return [...acc, `${startSting} added with value: ${formatVal(val2)}`];
-      if (val2 === undefined) return [...acc, `${startSting} removed`];
-      return [...acc, `${startSting} updated. From ${formatVal(val1)} to ${formatVal(val2)}`];
-    }
-    const [key, children] = elem;
-    return [...acc, ...iter(children, formatKey(key, path))];
-  }, []);
+import _ from 'lodash';
 
-  return iter(ast, '').join('\n');
+const stringify = val => (typeof val === 'object' ? '[complex value]' : val);
+const formatName = (name, parent) => (parent === '' ? name : `${parent}.${name}`);
+
+const render = (ast) => {
+  const iter = (acc, parentName) => acc.map((node) => {
+    const key = `Property '${formatName(node.name, parentName)}' was`;
+    switch (node.type) {
+      case 'added': return `${key} added with value: ${stringify(node.newValue)}`;
+      case 'deleted': return `${key} removed`;
+      case 'changed': return `${key} updated. From ${stringify(node.oldValue)} to ${stringify(node.newValue)}`;
+      case 'inner': return iter(node.children, formatName(node.name, parentName));
+      default: return null;
+    }
+  });
+  return _.flattenDeep(iter(ast, '')).filter(x => x).join('\n');
 };
 
 export default render;

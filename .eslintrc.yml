@@ -1,8 +1,10 @@
 env:
   node: true
+  jest: true
 
 plugins:
   - import
+  - jest
 
 parser: babel-eslint
 

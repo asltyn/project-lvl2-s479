@@ -1,22 +1,27 @@
 import _ from 'lodash';
 
-const stringify = (node) => {
-  //return node.type;
-  switch (node.type) {
-    case 'added': return [[`+  ${node.name}: `, f(node.newValue)]];
-    case 'deleted': return [[`-  ${node.name}: `,f(node.oldValue)]];
-    case 'unchanged': return [[`  ${node.name}: `,f(node.oldValue)]];
-    case 'changed': return [[`-  ${node.name}: `,f(node.oldValue)],[`+  ${node.name}: `,f(node.newValue)]];
-  }
-}
-
-const f = val => {
+const stringify = (val, i) => {
+  const indent = 2;
   if (typeof val !== 'object') return val;
-  return Object.entries(val);
-}
+  const res = Object.entries(val).map(([key, v]) => `${' '.repeat(i)}${key}: ${stringify(v, i + indent)}`).join('\n');
+  return `{\n${res}\n${' '.repeat(i - indent)}}`;
+};
 
 const render = (ast) => {
-  return ast.reduce((acc,node) => node.type === 'inner' ? [...acc, [node.name, render(node.children)]] : [...acc, ...stringify(node)], []);
+  const indent = 4;
+  const iter = (acc, i) => acc.map((node) => {
+    const depth = ' '.repeat(i);
+    switch (node.type) {
+      case 'added': return `${depth}+ ${node.name}: ${stringify(node.newValue, i + indent)}`;
+      case 'deleted': return `${depth}- ${node.name}: ${stringify(node.oldValue, i + indent)}`;
+      case 'unchanged': return `${depth}  ${node.name}: ${stringify(node.oldValue, i + indent)}`;
+      case 'changed': return [`${depth}- ${node.name}: ${stringify(node.oldValue, i + indent)}`,
+        `${depth}+ ${node.name}: ${stringify(node.newValue, i + indent)}`];
+      case 'inner': return [`${depth}  ${node.name}: {`, iter(node.children, i + indent), `${' '.repeat(i + 2)}}`];
+      default: return null;
+    }
+  });
+  return _.flattenDeep(iter(ast, 0)).join('\n');
 };
 
 export default render;

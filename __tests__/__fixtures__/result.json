@@ -1,19 +1,19 @@
 {
   "  common": {
-    "+ follow": false,
     "  setting1": "Value 1",
     "- setting2": "200",
     "+ setting3": {
       "key": "value"
     },
     "- setting3": true,
-    "+ setting4": "blah blah",
-    "+ setting5": {
-      "key5": "value5"
-    },
     "  setting6": {
       "  key": "value",
       "+ ops": "vops"
+    },
+    "+ follow": false,
+    "+ setting4": "blah blah",
+    "+ setting5": {
+      "key5": "value5"
     }
   },
   "  group1": {
@@ -27,6 +27,17 @@
   },
   "- group2": {
     "abc": "12345"
+  },
+  "- group4": {
+    "key4": "val4",
+    "key5": {
+      "k1": "v1",
+      "k2": "v2",
+      "k3": {
+        "aaaaaaa": "bbbbbbbb",
+        "bbbbbbb": "cccccccc"
+      }
+    }
   },
   "+ group3": {
     "fee": "100500"
