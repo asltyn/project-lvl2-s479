@@ -40,7 +40,7 @@ const makeAst = (objBeforeChange, objAfterChange) => {
   return allKeys.map((key) => {
     const args = [key, objBeforeChange, objAfterChange, makeAst];
     const { type, process } = getPropertyAction(args);
-    return { type, key, value: process(...args) };
+    return { type, name: key, value: process(...args) };
   });
 };
 
