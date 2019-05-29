@@ -15,7 +15,7 @@ const propertyAction = {
   added: (name, val, indent, fToStr) => `${indent}+ ${name}: ${fToStr(val)}`,
   deleted: (name, val, indent, fToStr) => `${indent}- ${name}: ${fToStr(val)}`,
   changed: (name, val, indent, fToStr) => [`${indent}- ${name}: ${fToStr(val.oldValue)}`,
-   `${indent}+ ${name}: ${fToStr(val.newValue)}`],
+    `${indent}+ ${name}: ${fToStr(val.newValue)}`],
   unchanged: (name, val, indent, fToStr) => `${indent}  ${name}: ${fToStr(val)}`,
   inner: (name, val, indent, fToStr, fIter) => [`${indent}  ${name}: {`, fIter(val), `${indent}  }`],
 };
@@ -25,9 +25,9 @@ const render = (ast) => {
   const iter = (tree, currLevel) => tree.map((node) => {
     const { type, name, value } = node;
     const indent = ' '.repeat(currLevel * extraSpacesOnLevel);
-    const indentForNextLevel = ' '.repeat((currLevel + 1) * extraSpacesOnLevel);
+    const nextIndent = ' '.repeat((currLevel + 1) * extraSpacesOnLevel);
     const process = propertyAction[type];
-    return process(name, value, indent, v => stringify(v, indentForNextLevel), v => iter(v, currLevel + 1));
+    return process(name, value, indent, v => stringify(v, nextIndent), v => iter(v, currLevel + 1));
   });
   return _.flattenDeep(iter(ast, 0)).join('\n');
 };
